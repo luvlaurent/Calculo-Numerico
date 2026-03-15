@@ -1,5 +1,5 @@
 # Comparação entre:
-# 1) Método de Newton
+# 1) Método de Newton-Raphson
 # 2) Método de Iteração Linear (Ponto Fixo)
 
 import numpy as np
@@ -39,7 +39,7 @@ x_iter = []
 erro_iter = []
 
 
-# Método de Newton
+# Método de Newton-Raphson
 # x(k+1) = x(k) - f(x)/f'(x)
 
 x = x0
@@ -79,7 +79,7 @@ for k in range(max_iter):
 
 # Tabela de resultados
 
-print("Método de Newton")
+print("Método de Newton-Raphson")
 print("Iteração | Aproximação | Erro")
 
 for i in range(len(x_newton)):
