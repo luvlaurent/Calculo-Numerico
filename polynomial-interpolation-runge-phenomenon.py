@@ -8,8 +8,6 @@ def runge(x):
     # Essa função é suave, mas causa problemas com interpolação de alto grau
     return 1.0 / (1.0 + 25.0 * x**2)
 
-
-
 # 2. Método de Vandermonde
 
 def interp_vandermonde(x_nodes, y_nodes, x_eval):
@@ -53,8 +51,6 @@ def interp_vandermonde(x_nodes, y_nodes, x_eval):
         k += 1
 
     return y_eval
-
-
 
 # 3. Método de Newton (diferenças divididas)
 
