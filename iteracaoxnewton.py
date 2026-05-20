@@ -2,12 +2,11 @@
 # 1) Método de Newton-Raphson
 # 2) Método de Iteração Linear (Ponto Fixo)
 
-import numpy as np
 import matplotlib.pyplot as plt
-
 
 # Função cuja raiz queremos encontrar
 # f(x) = x^3 - x - 2
+# A raiz real dessa equação é aproximadamente 1.5213797
 
 def f(x):
     return x**3 - x - 2
@@ -46,8 +45,17 @@ x = x0
 
 for k in range(max_iter):
 
-    x_new = x - f(x)/df(x)     # fórmula de Newton
-    erro = abs((x_new - x)/x_new)  # erro relativo
+    deriv = df(x)  # calcula a derivada
+
+    # verifica se a derivada é muito pequena
+    if abs(deriv) < 1e-12:
+        print("Derivada próxima de zero na iteração", k+1)
+        x = x + 1e-3   # pequeno ajuste no valor de x
+        continue       # pula para a próxima iteração
+
+    x_new = x - f(x)/deriv   # fórmula de Newton
+
+    erro = abs((x_new - x)/x_new)
 
     x_newton.append(x_new)
     erro_newton.append(erro)
@@ -91,7 +99,6 @@ print("Iteração | Aproximação | Erro")
 
 for i in range(len(x_iter)):
     print(i+1, x_iter[i], erro_iter[i])
-
 
 # Gráfico de convergência
 

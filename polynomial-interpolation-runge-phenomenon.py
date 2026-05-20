@@ -4,13 +4,14 @@ import matplotlib.pyplot as plt
 # 1. Função de Runge
 
 def runge(x):
-    # Define a função clássica usada para demonstrar o fenômeno de Runge
     # Essa função é suave, mas causa problemas com interpolação de alto grau
     return 1.0 / (1.0 + 25.0 * x**2)
 
 # 2. Método de Vandermonde
 
 def interp_vandermonde(x_nodes, y_nodes, x_eval):
+    # x_nodes são pontos usados para construir a interpolação
+    # x_eval são pontos usados para desenhare calcular a curva interpolada
     # Número de pontos de interpolação
     n = len(x_nodes)
 
@@ -23,16 +24,18 @@ def interp_vandermonde(x_nodes, y_nodes, x_eval):
     while i < n:
         j = 0
         while j < n:
-            A[i, j] = x_nodes[i]**j
+            A[i, j] = x_nodes[i]**j 
+            # Linha i: corresponde ao ponto xi
+            # Coluna j: corresponde à potência x^j
             j += 1
         i += 1
 
-    # Mostra o sistema linear montado
     print("\nSistema de Vandermonde (A * c = y):")
     print(A)
 
     # Resolve o sistema A * c = y
     # c são os coeficientes do polinômio
+    # y são os valores da função nos pontos dados
     coeffs = np.linalg.solve(A, y_nodes)
 
     # Avaliação do polinômio nos pontos desejados
@@ -42,7 +45,7 @@ def interp_vandermonde(x_nodes, y_nodes, x_eval):
     k = 0
     while k < m:
         s = 0.0  # soma acumulada do polinômio
-        p = 0
+        p = 0 # índice da potência do polinômio
         while p < n:
             # c0 + c1*x + c2*x² + ...
             s += coeffs[p] * (x_eval[k]**p)
@@ -55,6 +58,8 @@ def interp_vandermonde(x_nodes, y_nodes, x_eval):
 # 3. Método de Newton (diferenças divididas)
 
 def div_diff(x_nodes, y_nodes):
+    # As diferenças divididas surgem da formulação do polinômio de Newton
+    # e permitem calcular seus coeficientes de forma recursiva.
     # Número de pontos
     n = len(x_nodes)
 
@@ -92,6 +97,7 @@ def interp_newton(x_nodes, dd, x_eval):
         i = 1
         while i < n:
             term *= (x_eval[k] - x_nodes[i-1])
+            # a = a * b
             s += dd[i] * term
             i += 1
 
@@ -100,7 +106,7 @@ def interp_newton(x_nodes, dd, x_eval):
 
     return y_eval
 
-# 4. Método próprio: Base de Chebyshev (INTERPOLAÇÃO EXATA)
+# 4. Método próprio: Base de Chebyshev 
 
 def interp_chebyshev(x_nodes, y_nodes, x_eval):
     # Número de pontos
