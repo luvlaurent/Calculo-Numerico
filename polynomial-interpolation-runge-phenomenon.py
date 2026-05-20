@@ -2,44 +2,37 @@ import numpy as np
 import matplotlib.pyplot as plt  
 
 # 1. Função de Runge
-
 def runge(x):
-    # Essa função é suave, mas causa problemas com interpolação de alto grau
-    return 1.0 / (1.0 + 25.0 * x**2)
+    return 1.0 / (1.0 + x**2)
 
 # 2. Método de Vandermonde
-
 def interp_vandermonde(x_nodes, y_nodes, x_eval):
     # x_nodes são pontos usados para construir a interpolação
     # x_eval são pontos usados para desenhare calcular a curva interpolada
+    # y_nodes são os valores da função nos pontos de interpolação
+    
     # Número de pontos de interpolação
     n = len(x_nodes)
 
-    # Criamos a matriz de Vandermonde (n x n)
     A = np.zeros((n, n))
 
-    # Preenchendo a matriz:
     # Cada linha i é: [1, x_i, x_i², x_i³, ..., x_i^(n-1)]
     i = 0
     while i < n:
         j = 0
         while j < n:
             A[i, j] = x_nodes[i]**j 
-            # Linha i: corresponde ao ponto xi
-            # Coluna j: corresponde à potência x^j
             j += 1
         i += 1
 
     print("\nSistema de Vandermonde (A * c = y):")
     print(A)
 
-    # Resolve o sistema A * c = y
-    # c são os coeficientes do polinômio
     # y são os valores da função nos pontos dados
     coeffs = np.linalg.solve(A, y_nodes)
 
     # Avaliação do polinômio nos pontos desejados
-    m = len(x_eval)
+    m = len(x_eval) # quantos pontos serão avaliados
     y_eval = np.zeros(m)
 
     k = 0
@@ -50,7 +43,7 @@ def interp_vandermonde(x_nodes, y_nodes, x_eval):
             # c0 + c1*x + c2*x² + ...
             s += coeffs[p] * (x_eval[k]**p)
             p += 1
-        y_eval[k] = s
+        y_eval[k] = s # guarda o valor calculado do polinômio na posição k
         k += 1
 
     return y_eval
@@ -58,12 +51,8 @@ def interp_vandermonde(x_nodes, y_nodes, x_eval):
 # 3. Método de Newton (diferenças divididas)
 
 def div_diff(x_nodes, y_nodes):
-    # As diferenças divididas surgem da formulação do polinômio de Newton
-    # e permitem calcular seus coeficientes de forma recursiva.
-    # Número de pontos
     n = len(x_nodes)
 
-    # Copiamos os valores de y (será modificado)
     dd = np.copy(y_nodes).astype(float)
 
     # Construção da tabela de diferenças divididas
@@ -97,7 +86,6 @@ def interp_newton(x_nodes, dd, x_eval):
         i = 1
         while i < n:
             term *= (x_eval[k] - x_nodes[i-1])
-            # a = a * b
             s += dd[i] * term
             i += 1
 
@@ -109,10 +97,8 @@ def interp_newton(x_nodes, dd, x_eval):
 # 4. Método próprio: Base de Chebyshev 
 
 def interp_chebyshev(x_nodes, y_nodes, x_eval):
-    # Número de pontos
     n = len(x_nodes)
 
-    # Matriz do sistema linear
     A = np.zeros((n, n))
 
     i = 0
@@ -142,11 +128,9 @@ def interp_chebyshev(x_nodes, y_nodes, x_eval):
 
         i += 1
 
-    # Mostra o sistema
     print("\nSistema do método próprio (Chebyshev):")
     print(A)
 
-    # Resolve sistema → garante interpolação EXATA
     coeffs = np.linalg.solve(A, y_nodes)
 
     # Avaliação do polinômio
@@ -205,7 +189,6 @@ def main():
 
     y_cheb = interp_chebyshev(x_nodes, y_nodes, x_fine)
 
-    # Verifica se Vandermonde = Newton
     print("\nDiferença máxima (Vandermonde vs Newton):")
     print(np.max(np.abs(y_vand - y_newton)))
 
@@ -238,15 +221,7 @@ def main():
     plt.tight_layout()
     plt.show()
 
-    # CONCLUSÃO
-
-    print("\n" + "="*60)
-    print("CONCLUSÃO")
-    print("="*60)
-    print("• Vandermonde e Newton geram o MESMO polinômio.")
-    print("• Esse polinômio oscila nas bordas (fenômeno de Runge).")
-    print("• O método com Chebyshev interpola os pontos com mais estabilidade numérica.")
-
+    print("\nCONCLUSÃO")
 
 # Executa o programa
 if __name__ == "__main__":
